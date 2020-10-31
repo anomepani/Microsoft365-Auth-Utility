@@ -3,6 +3,8 @@ using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +40,13 @@ namespace MSALUtils
             {
                 Console.WriteLine("### RECEIVED TOKEN GraphToken Using MSAL.NET ###  \n  \n ");
                 Console.WriteLine(result.AccessToken);
+                var spClient = new HttpClient();
+                spClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                spClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                spClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", result.AccessToken);
+                var res = spClient.GetStringAsync("https://graph.microsoft.com/v1.0/me").Result;
+                Console.WriteLine("\n** MS Graph Received Result **\n\n");
+                Console.WriteLine(res);
             }
             else
             {

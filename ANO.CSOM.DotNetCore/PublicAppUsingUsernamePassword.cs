@@ -42,7 +42,7 @@ namespace MSALUtils
         /// </summary>
         /// <param name="app">MSAL.NET Public client application</param>
         /// <param name="httpClient">HttpClient used to call the protected Web API</param>
-        /// <remarks>X  
+        /// <remarks>
         /// For more information see https://aka.ms/msal-net-up
         /// </remarks>
         public PublicAppUsingUsernamePassword(IPublicClientApplication app)

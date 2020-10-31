@@ -11,6 +11,7 @@ namespace ADALUtils
 {
     class FileCache : TokenCache
     {
+        //Reference links : https://www.cloudidentity.com/blog/2014/07/09/the-new-token-cache-in-adal-v2/
         public string CacheFilePath;
         private static readonly object FileLock = new object();
 

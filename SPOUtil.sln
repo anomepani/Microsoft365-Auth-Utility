@@ -9,7 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADALUtils", "ADALUtils\ADAL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSALUtils", "MSALUtils\MSALUtils.csproj", "{8FA12638-9040-4475-B556-A3FBC8C7F0CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{0B2090CC-24AB-4F6A-859D-5E1226AA011F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{0B2090CC-24AB-4F6A-859D-5E1226AA011F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ANO.CSOM.DotNetCore", "ANO.CSOM.DotNetCore\ANO.CSOM.DotNetCore.csproj", "{9FF7240C-F243-4D61-A2E2-6A713C955297}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{0B2090CC-24AB-4F6A-859D-5E1226AA011F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B2090CC-24AB-4F6A-859D-5E1226AA011F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B2090CC-24AB-4F6A-859D-5E1226AA011F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FF7240C-F243-4D61-A2E2-6A713C955297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FF7240C-F243-4D61-A2E2-6A713C955297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FF7240C-F243-4D61-A2E2-6A713C955297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FF7240C-F243-4D61-A2E2-6A713C955297}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

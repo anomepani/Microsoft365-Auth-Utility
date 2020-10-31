@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,8 +33,14 @@ namespace ADALUtils
         static void Main(string[] args)
         {
             //100% Working Demo with Latest ADAL.NET Using Username and Password To Get Microsoft Graph Token
+            // Tested with  <package id="Microsoft.IdentityModel.Clients.ActiveDirectory" version="5.2.2" targetFramework="net461" />
             //Configure authContext For Multi Tenancy with TokenCache in ADAL.NET
+
             authContext = new AuthenticationContext(authority, new FileCache());
+
+            //authContext = new AuthenticationContext(authority, new TokenCache());
+
+            //authContext = new AuthenticationContext(authority);
 
             #region Obtain token
 
@@ -41,7 +49,8 @@ namespace ADALUtils
             if (result == null)
             {
                 // Authenticate using Username and Password
-                UserCredential uc = GetUserCredential();
+                UserPasswordCredential uc = GetUserCredential();
+              
 
                 try
                 {
@@ -57,7 +66,16 @@ namespace ADALUtils
                 Console.WriteLine("\n** MS Graph Token Received Using ADAL.NET **\n\n");
                 Console.WriteLine(result.AccessToken);
             }
+            var spClient = new HttpClient();
+            spClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //spClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            spClient.DefaultRequestHeaders.Authorization= new AuthenticationHeaderValue("Bearer", result.AccessToken);
+            var res = spClient.GetStringAsync("https://graph.microsoft.com/v1.0/me").Result;
+            Console.WriteLine("\n** MS Graph Received Result **\n\n");
 
+            res = spClient.GetStringAsync("https://graph.microsoft.com/v1.0/users").Result;
+            Console.WriteLine("\n** MS Graph users Received Result **\n\n");
+            Console.WriteLine(res);
             #endregion
 
         }
@@ -66,7 +84,7 @@ namespace ADALUtils
         ///  Gather user credentials form the command line
         /// </summary>
         /// <returns></returns>
-        static UserCredential GetUserCredential()
+        static UserPasswordCredential GetUserCredential()
         {
             string user = CommonCredentials.UserName;
             string password = CommonCredentials.Password;
@@ -84,7 +102,9 @@ namespace ADALUtils
             // first, try to get a token silently
             try
             {
-                return result = await authContext.AcquireTokenSilentAsync(todoListResourceId, clientId);
+                result = await authContext.AcquireTokenSilentAsync(todoListResourceId, clientId);
+                Console.WriteLine("token from  the cache");
+                return result;
             }
             catch (AdalException adalException)
             {

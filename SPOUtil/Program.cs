@@ -17,6 +17,7 @@ namespace SPOUtil
 {
     class Program
     {
+        //In this demo we have used  Sharepoint Online version 16.1.19404.12000 for DotNet Framework
         static void Main(string[] args)
         {
             #region Credentials
@@ -28,32 +29,66 @@ namespace SPOUtil
             string password = CommonCredentials.Password;
             #endregion
 
+            var rootUri = new Uri(siteUrl);
+            var reqUrl = $@"https://brgrp-admin.sharepoint.com/_vti_bin/client.svc/lists/GetByTitle('DO_NOT_DELETE_SPLIST_TENANTADMIN_AGGREGATED_SITECOLLECTIONS')/items?$top=10&$filter=IsGroupConnected";
+
+            #region Approach 1 Call REST API using CSOM with SPHttpClient
+            Console.WriteLine("Approach 1 Call REST API using CSOM SPHttpClient\n\n");
+            var client = new SPHttpClient(rootUri, userName, password);
+
+
+            var res = client.ExecuteJson(reqUrl);
+            Console.WriteLine("\nReceived All site collection data\n\n");
+            Console.WriteLine(res);
+            
+            #endregion
             SecureString secureString = new SecureString();
             foreach (char c in password)
                 secureString.AppendChar(c);
 
-            var rootUri = new Uri(siteUrl);
 
             var credentials = new SharePointOnlineCredentials(userName, secureString);
             var cookie = credentials.GetAuthenticationCookie(rootUri);
-            var reqUrl = $@"https://brgrp-admin.sharepoint.com/_vti_bin/client.svc/lists/GetByTitle('DO_NOT_DELETE_SPLIST_TENANTADMIN_AGGREGATED_SITECOLLECTIONS')/items?$top=10&$filter=IsGroupConnected";
-           
+          
+
             //Use SharePoint REST API To Get Admin sites using CookieContainer
+            //Most Essential Part for making REST Call is to use CookieContainer
             var cc = new CookieContainer();
             cc.SetCookies(rootUri, cookie);
 
-            Console.WriteLine("Requesting All site collection data");
+
+
+            #region Approach 2
+            var spClient = new HttpClient(new HttpClientHandler() { CookieContainer = cc });
+            spClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            Console.WriteLine("Apraoach 2 :Requesting All site collection data uisng HttpClient\n\n");
+            var groupConnectedSites = spClient.GetStringAsync(reqUrl).GetAwaiter().GetResult();
+            Console.WriteLine(groupConnectedSites);
+
+            Console.WriteLine("\n\n Received All site collection data\n\n");
+            #endregion
+
+            #region Approach 3 : Call SharePoint Online REST API Using C#
+            Console.WriteLine("Apraoach 3 :Requesting All site collection data with Resuable CallSharePointOnlineAPI method\n\n");
             var allSites = CallSharePointOnlineAPI(reqUrl, HttpMethod.Get, null, null, null, cc).GetAwaiter().GetResult();
 
 
-            Console.WriteLine("Received All site collection data");
+            Console.WriteLine("\nReceived All site collection data\n\n");
             Console.WriteLine(allSites);
 
-
-            #region Approach 2 Call REST API using CSOM
-            var client = new SPHttpClient(rootUri, userName, password);
-            var res = client.ExecuteJson(reqUrl); 
             #endregion
+
+            //#region Approach 3 Call REST API using CSOM
+            //Console.WriteLine("Approach 3 Call REST API using CSOM\n\n");
+            //var client = new SPHttpClient(rootUri, userName, password);
+            
+
+            //var res = client.ExecuteJson(reqUrl);
+            //Console.WriteLine("\nReceived All site collection data\n\n");
+            //Console.WriteLine(res);
+            //#endregion
+
+
 
         }
 
